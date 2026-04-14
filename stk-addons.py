@@ -187,7 +187,8 @@ def install_addon(addon: Addon, base_dir: Path, *, skip_existing: bool = True) -
     if skip_existing and addon_dir.exists() and any(addon_dir.iterdir()):
         return f"⏭  {addon.id} (already installed)"
 
-    target_dir.mkdir(parents=True, exist_ok=True)
+    # Extract into the addon's own subdirectory (zips from STK are flat)
+    addon_dir.mkdir(parents=True, exist_ok=True)
 
     try:
         data = http_get(addon.url)
@@ -201,17 +202,22 @@ def install_addon(addon: Addon, base_dir: Path, *, skip_existing: bool = True) -
                 f.write(data)
 
             with zipfile.ZipFile(zip_path, "r") as zf:
-                # Security: reject paths that escape the target directory
+                # Security: reject paths that escape the addon directory
                 for member in zf.namelist():
-                    resolved = (target_dir / member).resolve()
-                    if not str(resolved).startswith(str(target_dir.resolve())):
+                    resolved = (addon_dir / member).resolve()
+                    if not str(resolved).startswith(str(addon_dir.resolve())):
                         return f"✗  {addon.id} — zip contains unsafe path: {member}"
-                zf.extractall(target_dir)
+                zf.extractall(addon_dir)
 
         return f"✓  {addon.id}"
     except zipfile.BadZipFile:
+        # Clean up empty addon dir on failure
+        if addon_dir.exists() and not any(addon_dir.iterdir()):
+            addon_dir.rmdir()
         return f"✗  {addon.id} — corrupt zip"
     except Exception as exc:
+        if addon_dir.exists() and not any(addon_dir.iterdir()):
+            addon_dir.rmdir()
         return f"✗  {addon.id} — extract failed: {exc}"
 
 
@@ -360,6 +366,14 @@ def main():
             if not args.quiet:
                 print(f"  {stats.progress}  {result}")
 
+    # Update addons_installed.xml so STK recognizes installed addons
+    successfully_installed = [
+        a for a in addons
+        if (addon_path := addons_dir / ("karts" if a.type == "kart" else "tracks") / a.id)
+        and addon_path.exists() and any(addon_path.iterdir())
+    ]
+    update_installed_xml(addons_dir, successfully_installed)
+
     elapsed = time.monotonic() - start
     installed = stats.completed - stats.skipped - stats.failed
 
@@ -376,6 +390,41 @@ def main():
 
     if stats.failed:
         sys.exit(1)
+
+
+def update_installed_xml(base_dir: Path, installed_addons: list[Addon]):
+    """Update addons_installed.xml to mark addons as installed so STK recognizes them."""
+    xml_path = base_dir / "addons_installed.xml"
+    if not xml_path.exists():
+        # If STK hasn't created this file yet, we can't update it.
+        # The user needs to launch STK at least once first.
+        print("  ⚠  addons_installed.xml not found — launch STK once first, then re-run.")
+        return
+
+    try:
+        tree = ET.parse(xml_path)
+        root = tree.getroot()
+    except ET.ParseError as exc:
+        print(f"  ⚠  Could not parse addons_installed.xml: {exc}")
+        return
+
+    # Build a lookup of installed addon IDs -> revision
+    addon_map = {a.id: a for a in installed_addons}
+
+    updated = 0
+    for elem in root:
+        addon_id = elem.attrib.get("id", "")
+        if addon_id not in addon_map:
+            continue
+        addon = addon_map[addon_id]
+        if elem.attrib.get("installed") != "true":
+            elem.set("installed", "true")
+            elem.set("installed-revision", str(addon.revision))
+            updated += 1
+
+    if updated:
+        tree.write(xml_path, xml_declaration=True, encoding="unicode")
+        print(f"  📝 Updated addons_installed.xml ({updated} addons marked as installed)")
 
 
 if __name__ == "__main__":
