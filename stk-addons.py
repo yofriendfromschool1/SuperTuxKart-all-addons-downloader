@@ -26,7 +26,7 @@ from typing import Optional
 # ──────────────────────────── Constants ────────────────────────────
 
 XML_URL = "https://online.supertuxkart.net/dl/xml/online_assets.xml"
-USER_AGENT = "STK-Addons-Installer/2.0 (github.com/artyx/stk-addons)"
+USER_AGENT = "STK-Addons-Installer/2.0 (github.com/yofriendfromschool1/SuperTuxKart-all-addons-downloader)"
 MAX_RETRIES = 3
 RETRY_DELAY = 2  # seconds (doubles each retry)
 CHUNK_SIZE = 1024 * 64  # 64 KiB download chunks
