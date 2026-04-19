@@ -156,19 +156,13 @@ python3 stk-addons.py --dir ~/my-stk-addons
 <details>
 <summary><strong>How many addons are there?</strong></summary>
 
-As of 2025, there are **500+** community addons including karts, tracks, and arenas.
+As of 2026, there are **1000+** community addons including karts, tracks, and arenas.
 </details>
 
 <details>
 <summary><strong>Will this break my existing addons?</strong></summary>
 
 No. By default, the script **skips** any addon that is already installed. Use `--force` to re-download.
-</details>
-
-<details>
-<summary><strong>Does this work with the Steam version?</strong></summary>
-
-Yes — on Linux, the Steam version uses the same `~/.local/share/supertuxkart/addons/` directory. On Windows, it may use a different path — use `--dir` to point to the correct folder if auto-detection fails.
 </details>
 
 <details>
