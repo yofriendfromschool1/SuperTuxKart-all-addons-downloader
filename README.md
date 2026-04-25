@@ -1,10 +1,15 @@
 # 🏎 SuperTuxKart-all-addons-downloader
 
 **Bulk-install every SuperTuxKart community addon in one command.**
-## Some third party maps
+## Some third party addons
 https://freethewhale.ovh/packs/random_01.zip
 https://freethewhale.ovh/packs/random_02.zip
 https://freethewhale.ovh/packs/random_03.zip
+https://gamebanana.com/games/6390
+https://dl.kimden.online/?test&all
+https://dl.kimden.online/?m=3&c=99999
+for dl if on windows you need #/ImposterSus at end of url
+https://gamebanana.com/games/6390
 
 A cross-platform Python script that downloads and installs all karts, tracks, and arenas from the official [SuperTuxKart](https://supertuxkart.net) addon repository — in parallel.
 
