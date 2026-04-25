@@ -1,34 +1,36 @@
 # 🏎 SuperTuxKart-all-addons-downloader
 
 **Bulk-install every SuperTuxKart community addon in one command.**
-## Some third party addons
-https://freethewhale.ovh/packs/random_01.zip
-https://freethewhale.ovh/packs/random_02.zip
-https://freethewhale.ovh/packs/random_03.zip
-https://gamebanana.com/games/6390
-https://dl.kimden.online/?test&all
-https://dl.kimden.online/?m=3&c=99999
-for dl if on windows you need #/ImposterSus at end of url
-https://gamebanana.com/games/6390
 
-A cross-platform Python script that downloads and installs all karts, tracks, and arenas from the official [SuperTuxKart](https://supertuxkart.net) addon repository — in parallel.
+Two scripts — one for the **official STK repository**, one for **GameBanana** — that download and install all karts, tracks, and arenas into your game, in parallel.
+
+## Some third-party addon sources
+- https://freethewhale.ovh/packs/random_01.zip
+- https://freethewhale.ovh/packs/random_02.zip
+- https://freethewhale.ovh/packs/random_03.zip
+- https://gamebanana.com/games/6390
+- https://dl.kimden.online/?test&all
+- https://dl.kimden.online/?m=3&c=99999 (on Windows append `#/ImposterSus` to the URL)
+- btw for the dl you need to type /installaddon then the link here but i think max is 150 at a time
 
 ---
 
 ## ✨ Features
 
-| Feature | Description |
-|---|---|
-| **Cross-platform** | Linux (all distros), macOS, and Windows |
-| **Auto-detection** | Finds your STK addons folder automatically — including Flatpak & Snap |
-| **Parallel downloads** | Configurable thread pool (default: 8 threads) |
-| **Resumable** | Skips already-installed addons by default |
-| **Retries** | Exponential backoff on network failures (3 retries) |
-| **Filtering** | Install only karts, tracks, or arenas |
-| **Dry-run mode** | Preview what would be installed |
-| **List mode** | Browse all available addons without installing |
-| **Zip safety** | Rejects zip files with path traversal attacks |
-| **Zero dependencies** | Uses only Python standard library |
+| Feature | `stk-addons.py` | `stk-gamebanana.py` |
+|---|:---:|:---:|
+| **Cross-platform** (Linux, macOS, Windows) | ✅ | ✅ |
+| **Auto-detects** STK addons folder (Flatpak, Snap, native) | ✅ | ✅ |
+| **Parallel downloads** (configurable threads) | ✅ | ✅ |
+| **Resumable** (skips already-installed) | ✅ | ✅ |
+| **Retries** with exponential backoff | ✅ | ✅ |
+| **Filter** by type (kart/track/arena) | ✅ | ✅ |
+| **Dry-run & list modes** | ✅ | ✅ |
+| **Zip path traversal protection** | ✅ | ✅ |
+| **Zero dependencies** (Python stdlib only) | ✅ | ✅ |
+| Official STK XML addon database | ✅ | — |
+| GameBanana REST API (319+ mods, sounds) | — | ✅ |
+| Updates `addons_installed.xml` | ✅ | — |
 
 ---
 
@@ -59,28 +61,41 @@ A cross-platform Python script that downloads and installs all karts, tracks, an
 ## 🚀 Quick Start
 
 ### Prerequisites
-- **Python 3.10+** (uses `list[Addon]` syntax and `match`-style features)
+- **Python 3.10+**
 - **SuperTuxKart** installed on your system
 
-### One-liner
+### Install from official STK repository
 
 ```bash
-# Download and run
+# One-liner
 curl -LO https://raw.githubusercontent.com/yofriendfromschool1/SuperTuxKart-all-addons-downloader/main/stk-addons.py
 python3 stk-addons.py
 ```
 
-### Or clone the repo
+### Install from GameBanana
+
+```bash
+# One-liner
+curl -LO https://raw.githubusercontent.com/yofriendfromschool1/SuperTuxKart-all-addons-downloader/main/stk-gamebanana.py
+python3 stk-gamebanana.py
+```
+
+### Or clone the repo and run both
 
 ```bash
 git clone https://github.com/yofriendfromschool1/SuperTuxKart-all-addons-downloader.git
 cd SuperTuxKart-all-addons-downloader
+
+# Official addons
 python3 stk-addons.py
+
+# GameBanana addons
+python3 stk-gamebanana.py
 ```
 
 ---
 
-## 📖 Usage
+## 📖 Usage — `stk-addons.py` (Official Repository)
 
 ```
 usage: stk-addons [-h] [--type {kart,track,arena,all}] [--dir PATH]
@@ -102,31 +117,52 @@ usage: stk-addons [-h] [--type {kart,track,arena,all}] [--dir PATH]
 ### Examples
 
 ```bash
-# Install everything (skips already-installed)
-python3 stk-addons.py
+python3 stk-addons.py                        # Install everything
+python3 stk-addons.py --type kart             # Only karts
+python3 stk-addons.py --type track --force    # Force re-download tracks
+python3 stk-addons.py --workers 4             # Limit threads
+python3 stk-addons.py --dry-run               # Preview
+python3 stk-addons.py --list                  # Browse addons
+python3 stk-addons.py --dir ~/my-stk-addons   # Custom directory
+```
 
-# Install only karts
-python3 stk-addons.py --type kart
+---
 
-# Force re-download all tracks
-python3 stk-addons.py --type track --force
+## 📖 Usage — `stk-gamebanana.py` (GameBanana)
 
-# Limit to 4 threads (slower connection)
-python3 stk-addons.py --workers 4
+```
+usage: stk-gamebanana [-h] [--type {kart,track,arena,sound,other,all}] [--dir PATH]
+                      [--workers N] [--force] [--dry-run] [--list] [--quiet]
+```
 
-# Preview what would be installed
-python3 stk-addons.py --dry-run
+### Options
 
-# List all available addons
-python3 stk-addons.py --list
+| Flag | Short | Description |
+|---|---|---|
+| `--type TYPE` | `-t` | Install only `kart`, `track`, `arena`, `sound`, `other`, or `all` (default) |
+| `--dir PATH` | `-d` | Override the auto-detected addons directory |
+| `--workers N` | `-w` | Number of parallel download threads (default: 8) |
+| `--force` | `-f` | Re-download addons even if already installed |
+| `--dry-run` | `-n` | Show what would be installed without downloading |
+| `--list` | `-l` | List all available addons and exit |
+| `--quiet` | `-q` | Suppress per-addon output, show only summary |
 
-# Install to a custom directory
-python3 stk-addons.py --dir ~/my-stk-addons
+### Examples
+
+```bash
+python3 stk-gamebanana.py                        # Install everything from GameBanana
+python3 stk-gamebanana.py --type kart             # Only karts
+python3 stk-gamebanana.py --type track --force    # Force re-download tracks
+python3 stk-gamebanana.py --list                  # Browse all 319+ GameBanana addons
+python3 stk-gamebanana.py --dry-run               # Preview what would be installed
+python3 stk-gamebanana.py --dir ~/my-stk-addons   # Custom directory
 ```
 
 ---
 
 ## 🔧 How It Works
+
+### `stk-addons.py`
 
 ```
  ┌──────────────┐    ┌───────────────┐    ┌──────────────┐
@@ -140,17 +176,37 @@ python3 stk-addons.py --dir ~/my-stk-addons
                      └───────────────┘    └──────────────┘
 ```
 
-1. **Fetch** — Downloads the official `online_assets.xml` from supertuxkart.net
-2. **Parse** — Extracts addon metadata and deduplicates by ID (keeping highest revision)
-3. **Detect** — Automatically finds your STK addons folder based on OS and install method
-4. **Download** — Fetches addon ZIPs in parallel with configurable thread count
-5. **Extract** — Safely extracts each addon to the correct subfolder (`karts/` or `tracks/`)
+1. **Fetch** — Downloads `online_assets.xml` from supertuxkart.net
+2. **Parse** — Deduplicates by ID (keeping highest revision)
+3. **Detect** — Finds your addons folder (Flatpak / Snap / native / macOS / Windows)
+4. **Download** — Parallel ZIPs with configurable thread count
+5. **Extract** — Safely into `karts/` or `tracks/`
+
+### `stk-gamebanana.py`
+
+```
+ ┌───────────────┐    ┌───────────────┐    ┌───────────────┐
+ │  Paginate     │ →  │  Fetch mod    │ →  │  Parallel     │
+ │  mod list API │    │  details API  │    │  download     │
+ └───────────────┘    └───────────────┘    └──────┬────────┘
+                                                  │
+                      ┌───────────────┐    ┌──────▼────────┐
+                      │  Addons dir   │ ←  │  Extract      │
+                      │  (auto-detect)│    │  with safety  │
+                      └───────────────┘    └───────────────┘
+```
+
+1. **Paginate** — Walks all pages of the GameBanana `Core/List/New` API for Mod & Sound items
+2. **Details** — Fetches name, category, author, and download URLs via `Core/Item/Data`
+3. **Classify** — Maps GameBanana categories ("Karts", "Tracks", etc.) to STK subfolder
+4. **Download** — Parallel downloads via `gamebanana.com/dl/{id}`
+5. **Extract** — Safely into `karts/`, `tracks/`, or `gamebanana/` (for sounds/other)
 
 ---
 
 ## 🛡 Security
 
-- **Zip path traversal protection** — The script validates every file path inside downloaded ZIPs to ensure no file can be extracted outside the target directory.
+- **Zip path traversal protection** — Both scripts validate every file path inside downloaded ZIPs to ensure no file escapes the target directory.
 - **No eval / exec** — No dynamic code execution.
 - **No dependencies** — No supply-chain risk from third-party packages.
 
@@ -161,19 +217,26 @@ python3 stk-addons.py --dir ~/my-stk-addons
 <details>
 <summary><strong>How many addons are there?</strong></summary>
 
-As of 2026, there are **1000+** community addons including karts, tracks, and arenas.
+- **Official STK repo:** 1000+ community addons (karts, tracks, arenas)
+- **GameBanana:** 319+ mods plus sounds
 </details>
 
 <details>
 <summary><strong>Will this break my existing addons?</strong></summary>
 
-No. By default, the script **skips** any addon that is already installed. Use `--force` to re-download.
+No. Both scripts **skip** already-installed addons by default. Use `--force` to re-download.
+</details>
+
+<details>
+<summary><strong>Can I run both scripts?</strong></summary>
+
+Yes! They install to the same addons directory but use different naming. Run `stk-addons.py` first for the official addons, then `stk-gamebanana.py` for the community extras from GameBanana.
 </details>
 
 <details>
 <summary><strong>Can I use this on a headless server?</strong></summary>
 
-Yes. The script is terminal-only and requires no GUI. Useful for setting up a dedicated STK server with all tracks available.
+Yes. Both scripts are terminal-only and require no GUI. Useful for setting up a dedicated STK server with all tracks available.
 </details>
 
 <details>
@@ -206,6 +269,7 @@ MIT License — do whatever you want with it.
 Contributions welcome! Feel free to open issues or PRs for:
 - Bug fixes
 - New platform support
+- New addon sources
 - Performance improvements
 - Better error handling
 
