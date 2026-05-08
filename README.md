@@ -11,6 +11,7 @@ Two scripts — one for the **official STK repository**, one for **GameBanana** 
 - https://gamebanana.com/games/6390
 - https://stk.servegame.com/
 - https://stk.iluvatyr.com/all-in-one
+- https://github.com/8jq9ir/test
 - https://dl.kimden.online/?test&all
 - https://dl.kimden.online/?m=3&c=99999 (on Windows append `#/ImposterSus` to the URL)
 - https://dl.kimden.online/dl/rv.zip
