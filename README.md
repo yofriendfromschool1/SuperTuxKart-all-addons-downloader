@@ -15,6 +15,7 @@ Two scripts — one for the **official STK repository**, one for **GameBanana** 
 - https://dl.kimden.online/?m=3&c=99999 (on Windows append `#/ImposterSus` to the URL)
 - https://dl.kimden.online/dl/rv.zip
 - https://github.com/STK944/AO
+- https://cdjief.codeberg.page/stkaddons.html
 - btw for the dl you need to type /installaddon then the link here but i think max is 150 at a time
 
 ---
