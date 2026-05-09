@@ -17,6 +17,7 @@ Two scripts — one for the **official STK repository**, one for **GameBanana** 
 - https://dl.kimden.online/dl/rv.zip
 - https://github.com/STK944/AO
 - https://cdjief.codeberg.page/stkaddons.html
+- https://drive.google.com/file/d/1KbEA1SNDtlYH-bSywUMudJVva5Ajk_jy/view?pli=1
 - btw for the dl you need to type /installaddon then the link here but i think max is 150 at a time
 
 ---
