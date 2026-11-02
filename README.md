@@ -10,6 +10,8 @@ Two scripts — one for the **official STK repository**, one for **GameBanana** 
 - https://freethewhale.ovh/packs/random_03.zip
 - https://gamebanana.com/games/6390
 - https://stk.servegame.com/
+- https://downloads.tiersservers.eu/all_soccer_addons.zip
+- https://downloads.tiersservers.eu
 - https://stk.iluvatyr.com/all-in-one
 - https://github.com/8jq9ir/test
 - https://dl.kimden.online/?test&all
